@@ -76,7 +76,7 @@ export const MidiSpec = t.subtype({
                                    // reserved for percussion
 
     // The end of track event (if it exists) in ticks
-    endOfTrackTicks: t.num,
+    endOfTrackTicks: t.optional(t.num),
 
     instrument: t.subtype({           // and object representing the program change events
       number : t.num,                 // the instrument number 0-127
