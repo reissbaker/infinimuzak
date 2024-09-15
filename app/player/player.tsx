@@ -28,6 +28,9 @@ export default function Player(props: Props) {
         }, midi.duration * 1000));
       }
     }
+    return () => {
+      if(playing) stop(synths, setSynths);
+    }
   }, [ playing, synths ]);
 
   return <>

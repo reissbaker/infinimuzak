@@ -27,6 +27,9 @@ export default function Home() {
         <Link href="/spec" className="text-sky-500 underline hover:text-sky-300 cursor-pointer">
           TypeScript spec
         </Link>
+        <Link href="/music" className="text-sky-500 underline hover:text-sky-300 cursor-pointer">
+          Training data
+        </Link>
         <textarea onChange={e => setJson(e.target.value)} value={json} className="border border-slate-900 rounded block p-2 w-full" rows={20}/>
         { json.length === 0 ? "" : <p>
           { stringified.length.toLocaleString() } characters (est. { Math.ceil(stringified.length / 4).toLocaleString() } tokens)
