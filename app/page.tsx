@@ -13,8 +13,9 @@ export default function Home() {
   try {
     parsed = JSON.parse(json);
   } catch {
-    console.log(json, "is not json");
+    if(json !== "") console.log(json, "is not json");
   }
+  const stringified = parsed ? JSON.stringify(parsed) : json;
 
   const midi = MidiSpec.sliceResult(parsed);
   if(midi instanceof t.Err) console.log(midi.message);
@@ -27,8 +28,12 @@ export default function Home() {
           TypeScript spec
         </Link>
         <textarea onChange={e => setJson(e.target.value)} value={json} className="border border-slate-900 rounded block p-2 w-full" rows={20}/>
+        { json.length === 0 ? "" : <p>
+          { stringified.length.toLocaleString() } characters (est. { Math.ceil(stringified.length / 4).toLocaleString() } tokens)
+          </p>
+        }
         {
-          (midi instanceof t.Err) ? <div>error</div> : <Player midi={midi} />
+          (midi instanceof t.Err) ? json === "" ? "" : <div>Invalid JSON</div> : <Player midi={midi} />
         }
       </div>
     </div>

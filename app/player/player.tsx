@@ -1,6 +1,6 @@
 "use client";
 import { t } from "structural";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import * as Tone from "tone";
 import { Midi } from "@tonejs/midi";
 import { MidiSpec } from "./midi-spec";
@@ -17,15 +17,31 @@ export default function Player(props: Props) {
   const midi = useMemo(() => {
     return hydrateMidi(props.midi);
   }, [ props.midi ]);
+  const [ timer, setTimer ] = useState<NodeJS.Timeout | null>(null);
 
-  return <a className="bg-sky-500 text-white hover:bg-sky-300 transition-colors rounded p-4 my-2 cursor-pointer" onClick={e => {
-    e.preventDefault();
-    if(playing) stop(synths, setSynths);
-    else play(midi, synths, setSynths);
-    setPlaying(!playing);
-  }}>
-    { playing ? "Stop" : "Play" }
-  </a>
+  useEffect(() => {
+    if(playing) {
+      if(timer == null) {
+        setTimer(setTimeout(() => {
+          stop(synths, setSynths);
+          setPlaying(false);
+        }, midi.duration * 1000));
+      }
+    }
+  }, [ playing, synths ]);
+
+  return <>
+    <a className="bg-sky-500 text-white hover:bg-sky-300 transition-colors rounded p-4 my-2 cursor-pointer" onClick={e => {
+      e.preventDefault();
+      if(timer) clearTimeout(timer);
+      if(playing) stop(synths, setSynths);
+      else play(midi, synths, setSynths);
+      setPlaying(!playing);
+    }}>
+      { playing ? "Stop" : "Play" }
+    </a>
+    <p>{ midi.duration } seconds</p>
+  </>
 }
 
 function stop(synths: Tone.PolySynth[], setSynths: (synths: Tone.PolySynth[]) => any) {
