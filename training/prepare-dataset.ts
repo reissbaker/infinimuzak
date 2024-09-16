@@ -25,11 +25,24 @@ async function prepare() {
     dataset.push(finishSong(midi));
   }
 
-  await fs.writeFile("./dataset.jsonl", dataset.map(convo => {
-    return JSON.stringify({
+  const jsonl = dataset.map(convo => {
+    const file = JSON.stringify({
       conversations: convo.map(msg => ({ from: msg.role, value: msg.content })),
     });
-  }).join("\n"), "utf8");
+    return file;
+  }).filter((_, index) => {
+    /*
+    if(line.length > 100000 * 4) {
+      console.log("Filtering", musicFiles[index]);
+      return false;
+    }
+    */
+    console.log("Passing", musicFiles[index]);
+    return true;
+  });
+
+  await fs.writeFile(path.join(__dirname, "dataset.jsonl"), jsonl.join("\n"), "utf8");
+  await fs.writeFile(path.join(__dirname, "system-prompt.txt"), systemPrompt(), "utf8");
 }
 
 function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
@@ -56,11 +69,7 @@ function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
   return [
     {
       role: "system",
-      content: `You're an excellent composer of MIDI-style music. Here is the TypeScript spec for
-MIDI-like JSON:
-
-${toTypescript({ ControlChangeSpec, MidiSpec })}
-`
+      content: systemPrompt(),
     },
     {
       role: "user",
@@ -71,6 +80,13 @@ ${toTypescript({ ControlChangeSpec, MidiSpec })}
       content: JSON.stringify(midi)
     },
   ];
+}
+
+function systemPrompt() {
+return `You're an excellent composer of MIDI-style music. Here is the TypeScript spec for MIDI-like JSON:
+
+${toTypescript({ ControlChangeSpec, MidiSpec })}
+`
 }
 
 function halfArray<T>(arr: T[]) {

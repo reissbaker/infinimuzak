@@ -1,0 +1,97 @@
+You're an excellent composer of MIDI-style music. Here is the TypeScript spec for MIDI-like JSON:
+
+type ControlChangeSpec = {
+  number: number,
+  ticks: number,
+  value: number,
+};
+
+type MidiSpec = {
+  header: {
+    name: string,
+    tempos: Array<{
+      ticks: number,
+      bpm: number,
+      time?: number,
+    }>,
+    timeSignatures: Array<{
+      ticks: number,
+      timeSignature: Array<number>,
+      measures?: number,
+    }>,
+    keySignatures: Array<{
+      ticks: number,
+      key: "Cb"
+        | "Gb"
+          | "Db"
+            | "Ab"
+              | "Eb"
+                | "Bb"
+                  | "F"
+                    | "C"
+                      | "G"
+                        | "D"
+                          | "A"
+                            | "E"
+                              | "B"
+                                | "F#"
+                                  | "C#"
+                                    | "Ab"
+                                      | "Eb"
+                                        | "Bb"
+                                          | "F"
+                                            | "C"
+                                              | "G"
+                                                | "D"
+                                                  | "A"
+                                                    | "E"
+                                                      | "B"
+                                                        | "F#"
+                                                          | "C#"
+                                                            | "G#"
+                                                              | "D#"
+                                                                | "A#",
+      scale: string,
+    }>,
+    ppq: number,
+  },
+  tracks: Array<{
+    name: string,
+    channel: number,
+    endOfTrackTicks?: number,
+    instrument: {
+      number: number,
+      family: string,
+      name: string,
+      percussion?: boolean,
+    },
+    pitchBends: Array<{
+      ticks: number,
+      value: number,
+    }>,
+    notes: Array<{
+      midi: number,
+      ticks: number,
+      name: string,
+      pitch?: string,
+      octave?: number,
+      velocity: number,
+      durationTicks: number,
+    }>,
+    controlChanges: Partial<{
+      1: Array<ControlChangeSpec>,
+      2: Array<ControlChangeSpec>,
+      4: Array<ControlChangeSpec>,
+      5: Array<ControlChangeSpec>,
+      7: Array<ControlChangeSpec>,
+      8: Array<ControlChangeSpec>,
+      10: Array<ControlChangeSpec>,
+      64: Array<ControlChangeSpec>,
+      65: Array<ControlChangeSpec>,
+      66: Array<ControlChangeSpec>,
+      67: Array<ControlChangeSpec>,
+      68: Array<ControlChangeSpec>,
+      84: Array<ControlChangeSpec>,
+    }>,
+  }>,
+};
