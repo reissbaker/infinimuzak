@@ -66,7 +66,7 @@ function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
         instrument: track.instrument,
         pitchBends: halfArray(track.pitchBends),
         notes: halfArray(track.notes),
-        controlChanges: Object.fromEntries(Object.entries(track.controlChanges).map(([ key, value ]) => {
+        controlChanges: Object.fromEntries(Object.entries(track.controlChanges || {}).map(([ key, value ]) => {
           return [
             key,
             halfArray(value),
