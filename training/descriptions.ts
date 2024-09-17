@@ -32,6 +32,9 @@ export const descriptions: Record<string, string[]> = {
   "dkc2-island-map": [
     "underground", "intense", "frantic"
   ],
+  "dkc2-pirate": [
+    "laidback", "upbeat", "rhythmic",
+  ],
   "earthbound-flash-of-memory": [
     "adventurous", "timid", "gentle",
   ],
@@ -48,7 +51,7 @@ export const descriptions: Record<string, string[]> = {
     "joyful", "adventure", "jazzy",
   ],
   "fairy-tale-main-theme": [
-    "intro", "harmonic", "symphonic"
+    "intro", "harmonic", "bittersweet"
   ],
   "final-fantasy": [
     "tranquil", "ambient", "enchanting",
@@ -71,6 +74,12 @@ export const descriptions: Record<string, string[]> = {
   "lttp-ending": [
     "adventurous", "dynamic", "enchanting",
   ],
+  "mario-water": [
+    "chill", "laid back", "ambient"
+  ],
+  "naruto-sadness-and-sorrow": [
+    "sad", "classical", "solemn", "symphonic"
+  ],
   "new-new-avicii": [
     "adventurous", "intro", "buildup", "edm", "electric",
   ],
@@ -82,5 +91,8 @@ export const descriptions: Record<string, string[]> = {
   ],
   "tiesto-olympic-flame-intro": [
     "fast", "electric", "intro",
+  ],
+  "zelda-triforce-example": [
+    "short", "wind-focused", "reedy", "upbeat"
   ],
 }

@@ -1,0 +1,663 @@
+{
+  "header": {
+    "keySignatures": [],
+    "meta": [],
+    "name": "",
+    "ppq": 384,
+    "tempos": [
+      {
+        "bpm": 151.2001512001512,
+        "ticks": 0
+      }
+    ],
+    "timeSignatures": [
+      {
+        "ticks": 0,
+        "timeSignature": [
+          4,
+          4
+        ],
+        "measures": 0
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "channel": 0,
+      "controlChanges": {
+        "0": [
+          {
+            "number": 0,
+            "ticks": 0,
+            "time": 0,
+            "value": 0
+          }
+        ]
+      },
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 6716
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "reed",
+        "number": 71,
+        "name": "clarinet"
+      },
+      "name": "",
+      "notes": [
+        {
+          "duration": 1.18634140625,
+          "durationTicks": 1148,
+          "midi": 67,
+          "name": "G4",
+          "ticks": 0,
+          "time": 0,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 67,
+          "name": "G4",
+          "ticks": 1152,
+          "time": 1.190475,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 69,
+          "name": "A4",
+          "ticks": 1248,
+          "time": 1.28968125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265624999994,
+          "durationTicks": 92,
+          "midi": 71,
+          "name": "B4",
+          "ticks": 1344,
+          "time": 1.3888875,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265624999994,
+          "durationTicks": 92,
+          "midi": 72,
+          "name": "C5",
+          "ticks": 1440,
+          "time": 1.48809375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.18634140625,
+          "durationTicks": 1148,
+          "midi": 74,
+          "name": "D5",
+          "ticks": 1536,
+          "time": 1.5873,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1281414062499997,
+          "durationTicks": 124,
+          "midi": 74,
+          "name": "D5",
+          "ticks": 2688,
+          "time": 2.777775,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.12814140625000014,
+          "durationTicks": 124,
+          "midi": 74,
+          "name": "D5",
+          "ticks": 2816,
+          "time": 2.9100499999999996,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1281414062499997,
+          "durationTicks": 124,
+          "midi": 74,
+          "name": "D5",
+          "ticks": 2944,
+          "time": 3.042325,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.1863414062500004,
+          "durationTicks": 1148,
+          "midi": 79,
+          "name": "G5",
+          "ticks": 3072,
+          "time": 3.1746,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 79,
+          "name": "G5",
+          "ticks": 4224,
+          "time": 4.365075,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 81,
+          "name": "A5",
+          "ticks": 4320,
+          "time": 4.46428125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 83,
+          "name": "B5",
+          "ticks": 4416,
+          "time": 4.5634875,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 84,
+          "name": "C6",
+          "ticks": 4512,
+          "time": 4.66269375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.1863414062500004,
+          "durationTicks": 1148,
+          "midi": 86,
+          "name": "D6",
+          "ticks": 4608,
+          "time": 4.7619,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 5760,
+          "time": 5.952375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1942789062500001,
+          "durationTicks": 188,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 5856,
+          "time": 6.05158125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 6048,
+          "time": 6.24999375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.5911039062499999,
+          "durationTicks": 572,
+          "midi": 67,
+          "name": "G4",
+          "ticks": 6144,
+          "time": 6.3492,
+          "velocity": 0.7874015748031497
+        }
+      ]
+    },
+    {
+      "channel": 0,
+      "controlChanges": {
+        "0": [
+          {
+            "number": 0,
+            "ticks": 0,
+            "time": 0,
+            "value": 0
+          }
+        ]
+      },
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 6716
+    },
+    {
+      "channel": 1,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "reed",
+        "number": 71,
+        "name": "clarinet"
+      },
+      "name": "",
+      "notes": [
+        {
+          "duration": 0.12814140625000003,
+          "durationTicks": 124,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 384,
+          "time": 0.396825,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.12814140625000003,
+          "durationTicks": 124,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 512,
+          "time": 0.5290999999999999,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.12814140624999992,
+          "durationTicks": 124,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 640,
+          "time": 0.661375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.1863414062499997,
+          "durationTicks": 1148,
+          "midi": 55,
+          "name": "G3",
+          "ticks": 768,
+          "time": 0.79365,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265624999994,
+          "durationTicks": 92,
+          "midi": 55,
+          "name": "G3",
+          "ticks": 1920,
+          "time": 1.984125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265624999972,
+          "durationTicks": 92,
+          "midi": 57,
+          "name": "A3",
+          "ticks": 2016,
+          "time": 2.08333125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265624999972,
+          "durationTicks": 92,
+          "midi": 59,
+          "name": "B3",
+          "ticks": 2112,
+          "time": 2.1825375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265624999972,
+          "durationTicks": 92,
+          "midi": 60,
+          "name": "C4",
+          "ticks": 2208,
+          "time": 2.28174375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.1863414062500004,
+          "durationTicks": 1148,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 2304,
+          "time": 2.38095,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.12814140625000014,
+          "durationTicks": 124,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 3456,
+          "time": 3.5714249999999996,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1281414062499997,
+          "durationTicks": 124,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 3584,
+          "time": 3.7037,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1281414062500006,
+          "durationTicks": 124,
+          "midi": 62,
+          "name": "D4",
+          "ticks": 3712,
+          "time": 3.8359749999999995,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.18634140625,
+          "durationTicks": 1148,
+          "midi": 67,
+          "name": "G4",
+          "ticks": 3840,
+          "time": 3.96825,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 67,
+          "name": "G4",
+          "ticks": 4992,
+          "time": 5.158725,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 69,
+          "name": "A4",
+          "ticks": 5088,
+          "time": 5.2579312499999995,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 71,
+          "name": "B4",
+          "ticks": 5184,
+          "time": 5.357137499999999,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000105,
+          "durationTicks": 92,
+          "midi": 72,
+          "name": "C5",
+          "ticks": 5280,
+          "time": 5.456343749999999,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.39269140625,
+          "durationTicks": 380,
+          "midi": 74,
+          "name": "D5",
+          "ticks": 5376,
+          "time": 5.55555,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 54,
+          "name": "F#3",
+          "ticks": 5760,
+          "time": 5.952375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1942789062500001,
+          "durationTicks": 188,
+          "midi": 54,
+          "name": "F#3",
+          "ticks": 5856,
+          "time": 6.05158125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 54,
+          "name": "F#3",
+          "ticks": 6048,
+          "time": 6.24999375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.5911039062499999,
+          "durationTicks": 572,
+          "midi": 59,
+          "name": "B3",
+          "ticks": 6144,
+          "time": 6.3492,
+          "velocity": 0.7874015748031497
+        }
+      ]
+    },
+    {
+      "channel": 0,
+      "controlChanges": {
+        "0": [
+          {
+            "number": 0,
+            "ticks": 0,
+            "time": 0,
+            "value": 0
+          }
+        ]
+      },
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 6716
+    },
+    {
+      "channel": 2,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "synth lead",
+        "number": 85,
+        "name": "lead 6 (voice)"
+      },
+      "name": "",
+      "notes": [
+        {
+          "duration": 1.58316640625,
+          "durationTicks": 1532,
+          "midi": 55,
+          "name": "G3",
+          "ticks": 0,
+          "time": 0,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.5831664062499997,
+          "durationTicks": 1532,
+          "midi": 53,
+          "name": "F3",
+          "ticks": 1536,
+          "time": 1.5873,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.5831664062500002,
+          "durationTicks": 1532,
+          "midi": 51,
+          "name": "D#3",
+          "ticks": 3072,
+          "time": 3.1746,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 1.1863414062500004,
+          "durationTicks": 1148,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 4608,
+          "time": 4.7619,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 5760,
+          "time": 5.952375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.1942789062500001,
+          "durationTicks": 188,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 5856,
+          "time": 6.05158125,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.09507265625000016,
+          "durationTicks": 92,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 6048,
+          "time": 6.24999375,
+          "velocity": 0.7874015748031497
+        },
+        {
+          "duration": 0.5911039062499999,
+          "durationTicks": 572,
+          "midi": 50,
+          "name": "D3",
+          "ticks": 6144,
+          "time": 6.3492,
+          "velocity": 0.7874015748031497
+        }
+      ]
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "Jeffrey M Colletti",
+      "notes": [],
+      "endOfTrackTicks": 0
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "jcollett@attila.stevens-tech.edu",
+      "notes": [],
+      "endOfTrackTicks": 0
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 0
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 0
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 0
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 0
+    },
+    {
+      "channel": 0,
+      "controlChanges": {},
+      "pitchBends": [],
+      "instrument": {
+        "family": "piano",
+        "number": 0,
+        "name": "acoustic grand piano"
+      },
+      "name": "",
+      "notes": [],
+      "endOfTrackTicks": 0
+    }
+  ]
+}
