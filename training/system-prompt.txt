@@ -1,5 +1,67 @@
 You're an excellent composer of MIDI-style music. Here is the TypeScript spec for MIDI-like JSON:
 
+type TypedTime = {
+  type: "time",
+}
+  & {
+    ticks: number,
+
+    // the time signature, e.g. [4, 4]
+    timeSignature: Array<number>,
+
+    measures?: number,
+  };
+
+type TypedKey = {
+  type: "key",
+}
+  & {
+    ticks: number,
+    key: "Cb"
+      | "Gb"
+      | "Db"
+      | "Ab"
+      | "Eb"
+      | "Bb"
+      | "F"
+      | "C"
+      | "G"
+      | "D"
+      | "A"
+      | "E"
+      | "B"
+      | "F#"
+      | "C#"
+      | "Ab"
+      | "Eb"
+      | "Bb"
+      | "F"
+      | "C"
+      | "G"
+      | "D"
+      | "A"
+      | "E"
+      | "B"
+      | "F#"
+      | "C#"
+      | "G#"
+      | "D#"
+      | "A#",
+    scale: string,
+  };
+
+type TypedTempo = {
+  type: "tempo",
+}
+  & {
+    ticks: number,
+
+    // the tempo, e.g. 120
+    bpm: number,
+
+    time?: number,
+  };
+
 type ControlChangeSpec = {
   type: "cc",
 
@@ -24,17 +86,17 @@ type ControlChangeSpec = {
    */
   number: 1
     | 2
-      | 4
-        | 5
-          | 7
-            | 8
-              | 10
-                | 64
-                  | 65
-                    | 66
-                      | 67
-                        | 68
-                          | 84,
+    | 4
+    | 5
+    | 7
+    | 8
+    | 10
+    | 64
+    | 65
+    | 66
+    | 67
+    | 68
+    | 84,
 
   ticks: number,
 
@@ -79,6 +141,164 @@ type Note = {
   durationTicks: number,
 };
 
+type Instrument = {
+  family: "piano"
+    | "chromatic percussion"
+    | "organ"
+    | "guitar"
+    | "bass"
+    | "strings"
+    | "ensemble"
+    | "brass"
+    | "reed"
+    | "pipe"
+    | "synth lead"
+    | "synth pad"
+    | "synth effects"
+    | "world"
+    | "percussive"
+    | "sound effects"
+    | "drums",
+  name: "acoustic grand piano"
+    | "bright acoustic piano"
+    | "electric grand piano"
+    | "honky-tonk piano"
+    | "electric piano 1"
+    | "electric piano 2"
+    | "harpsichord"
+    | "clavi"
+    | "celesta"
+    | "glockenspiel"
+    | "music box"
+    | "vibraphone"
+    | "marimba"
+    | "xylophone"
+    | "tubular bells"
+    | "dulcimer"
+    | "drawbar organ"
+    | "percussive organ"
+    | "rock organ"
+    | "church organ"
+    | "reed organ"
+    | "accordion"
+    | "harmonica"
+    | "tango accordion"
+    | "acoustic guitar (nylon)"
+    | "acoustic guitar (steel)"
+    | "electric guitar (jazz)"
+    | "electric guitar (clean)"
+    | "electric guitar (muted)"
+    | "overdriven guitar"
+    | "distortion guitar"
+    | "guitar harmonics"
+    | "acoustic bass"
+    | "electric bass (finger)"
+    | "electric bass (pick)"
+    | "fretless bass"
+    | "slap bass 1"
+    | "slap bass 2"
+    | "synth bass 1"
+    | "synth bass 2"
+    | "violin"
+    | "viola"
+    | "cello"
+    | "contrabass"
+    | "tremolo strings"
+    | "pizzicato strings"
+    | "orchestral harp"
+    | "timpani"
+    | "string ensemble 1"
+    | "string ensemble 2"
+    | "synthstrings 1"
+    | "synthstrings 2"
+    | "choir aahs"
+    | "voice oohs"
+    | "synth voice"
+    | "orchestra hit"
+    | "trumpet"
+    | "trombone"
+    | "tuba"
+    | "muted trumpet"
+    | "french horn"
+    | "brass section"
+    | "synthbrass 1"
+    | "synthbrass 2"
+    | "soprano sax"
+    | "alto sax"
+    | "tenor sax"
+    | "baritone sax"
+    | "oboe"
+    | "english horn"
+    | "bassoon"
+    | "clarinet"
+    | "piccolo"
+    | "flute"
+    | "recorder"
+    | "pan flute"
+    | "blown bottle"
+    | "shakuhachi"
+    | "whistle"
+    | "ocarina"
+    | "lead 1 (square)"
+    | "lead 2 (sawtooth)"
+    | "lead 3 (calliope)"
+    | "lead 4 (chiff)"
+    | "lead 5 (charang)"
+    | "lead 6 (voice)"
+    | "lead 7 (fifths)"
+    | "lead 8 (bass + lead)"
+    | "pad 1 (new age)"
+    | "pad 2 (warm)"
+    | "pad 3 (polysynth)"
+    | "pad 4 (choir)"
+    | "pad 5 (bowed)"
+    | "pad 6 (metallic)"
+    | "pad 7 (halo)"
+    | "pad 8 (sweep)"
+    | "fx 1 (rain)"
+    | "fx 2 (soundtrack)"
+    | "fx 3 (crystal)"
+    | "fx 4 (atmosphere)"
+    | "fx 5 (brightness)"
+    | "fx 6 (goblins)"
+    | "fx 7 (echoes)"
+    | "fx 8 (sci-fi)"
+    | "sitar"
+    | "banjo"
+    | "shamisen"
+    | "koto"
+    | "kalimba"
+    | "bag pipe"
+    | "fiddle"
+    | "shanai"
+    | "tinkle bell"
+    | "agogo"
+    | "steel drums"
+    | "woodblock"
+    | "taiko drum"
+    | "melodic tom"
+    | "synth drum"
+    | "reverse cymbal"
+    | "guitar fret noise"
+    | "breath noise"
+    | "seashore"
+    | "bird tweet"
+    | "telephone ring"
+    | "helicopter"
+    | "applause"
+    | "gunshot"
+    | "standard kit"
+    | "room kit"
+    | "power kit"
+    | "electronic kit"
+    | "tr-808 kit"
+    | "jazz kit"
+    | "brush kit"
+    | "orchestra kit"
+    | "sound fx kit",
+  percussion?: boolean,
+};
+
 type SimpleMidiSpec = {
   header: {
     // The song name
@@ -93,223 +313,11 @@ type SimpleMidiSpec = {
     // the channel; channels 9 and 10 are reserved for percussion
     channel: number,
 
-    instrument: {
-      family: "piano"
-        | "chromatic percussion"
-          | "organ"
-            | "guitar"
-              | "bass"
-                | "strings"
-                  | "ensemble"
-                    | "brass"
-                      | "reed"
-                        | "pipe"
-                          | "synth lead"
-                            | "synth pad"
-                              | "synth effects"
-                                | "world"
-                                  | "percussive"
-                                    | "sound effects"
-                                      | "drums",
-      name: "acoustic grand piano"
-        | "bright acoustic piano"
-          | "electric grand piano"
-            | "honky-tonk piano"
-              | "electric piano 1"
-                | "electric piano 2"
-                  | "harpsichord"
-                    | "clavi"
-                      | "celesta"
-                        | "glockenspiel"
-                          | "music box"
-                            | "vibraphone"
-                              | "marimba"
-                                | "xylophone"
-                                  | "tubular bells"
-                                    | "dulcimer"
-                                      | "drawbar organ"
-                                        | "percussive organ"
-                                          | "rock organ"
-                                            | "church organ"
-                                              | "reed organ"
-                                                | "accordion"
-                                                  | "harmonica"
-                                                    | "tango accordion"
-                                                      | "acoustic guitar (nylon)"
-                                                        | "acoustic guitar (steel)"
-                                                          | "electric guitar (jazz)"
-                                                            | "electric guitar (clean)"
-                                                              | "electric guitar (muted)"
-                                                                | "overdriven guitar"
-                                                                  | "distortion guitar"
-                                                                    | "guitar harmonics"
-                                                                      | "acoustic bass"
-                                                                        | "electric bass (finger)"
-                                                                          | "electric bass (pick)"
-                                                                            | "fretless bass"
-                                                                              | "slap bass 1"
-                                                                                | "slap bass 2"
-                                                                                  | "synth bass 1"
-                                                                                    | "synth bass 2"
-                                                                                      | "violin"
-                                                                                        | "viola"
-                                                                                          | "cello"
-                                                                                            | "contrabass"
-                                                                                              | "tremolo strings"
-                                                                                                | "pizzicato strings"
-                                                                                                  | "orchestral harp"
-                                                                                                    | "timpani"
-                                                                                                      | "string ensemble 1"
-                                                                                                        | "string ensemble 2"
-                                                                                                          | "synthstrings 1"
-                                                                                                            | "synthstrings 2"
-                                                                                                              | "choir aahs"
-                                                                                                                | "voice oohs"
-                                                                                                                  | "synth voice"
-                                                                                                                    | "orchestra hit"
-                                                                                                                      | "trumpet"
-                                                                                                                        | "trombone"
-                                                                                                                          | "tuba"
-                                                                                                                            | "muted trumpet"
-                                                                                                                              | "french horn"
-                                                                                                                                | "brass section"
-                                                                                                                                  | "synthbrass 1"
-                                                                                                                                    | "synthbrass 2"
-                                                                                                                                      | "soprano sax"
-                                                                                                                                        | "alto sax"
-                                                                                                                                          | "tenor sax"
-                                                                                                                                            | "baritone sax"
-                                                                                                                                              | "oboe"
-                                                                                                                                                | "english horn"
-                                                                                                                                                  | "bassoon"
-                                                                                                                                                    | "clarinet"
-                                                                                                                                                      | "piccolo"
-                                                                                                                                                        | "flute"
-                                                                                                                                                          | "recorder"
-                                                                                                                                                            | "pan flute"
-                                                                                                                                                              | "blown bottle"
-                                                                                                                                                                | "shakuhachi"
-                                                                                                                                                                  | "whistle"
-                                                                                                                                                                    | "ocarina"
-                                                                                                                                                                      | "lead 1 (square)"
-                                                                                                                                                                        | "lead 2 (sawtooth)"
-                                                                                                                                                                          | "lead 3 (calliope)"
-                                                                                                                                                                            | "lead 4 (chiff)"
-                                                                                                                                                                              | "lead 5 (charang)"
-                                                                                                                                                                                | "lead 6 (voice)"
-                                                                                                                                                                                  | "lead 7 (fifths)"
-                                                                                                                                                                                    | "lead 8 (bass + lead)"
-                                                                                                                                                                                      | "pad 1 (new age)"
-                                                                                                                                                                                        | "pad 2 (warm)"
-                                                                                                                                                                                          | "pad 3 (polysynth)"
-                                                                                                                                                                                            | "pad 4 (choir)"
-                                                                                                                                                                                              | "pad 5 (bowed)"
-                                                                                                                                                                                                | "pad 6 (metallic)"
-                                                                                                                                                                                                  | "pad 7 (halo)"
-                                                                                                                                                                                                    | "pad 8 (sweep)"
-                                                                                                                                                                                                      | "fx 1 (rain)"
-                                                                                                                                                                                                        | "fx 2 (soundtrack)"
-                                                                                                                                                                                                          | "fx 3 (crystal)"
-                                                                                                                                                                                                            | "fx 4 (atmosphere)"
-                                                                                                                                                                                                              | "fx 5 (brightness)"
-                                                                                                                                                                                                                | "fx 6 (goblins)"
-                                                                                                                                                                                                                  | "fx 7 (echoes)"
-                                                                                                                                                                                                                    | "fx 8 (sci-fi)"
-                                                                                                                                                                                                                      | "sitar"
-                                                                                                                                                                                                                        | "banjo"
-                                                                                                                                                                                                                          | "shamisen"
-                                                                                                                                                                                                                            | "koto"
-                                                                                                                                                                                                                              | "kalimba"
-                                                                                                                                                                                                                                | "bag pipe"
-                                                                                                                                                                                                                                  | "fiddle"
-                                                                                                                                                                                                                                    | "shanai"
-                                                                                                                                                                                                                                      | "tinkle bell"
-                                                                                                                                                                                                                                        | "agogo"
-                                                                                                                                                                                                                                          | "steel drums"
-                                                                                                                                                                                                                                            | "woodblock"
-                                                                                                                                                                                                                                              | "taiko drum"
-                                                                                                                                                                                                                                                | "melodic tom"
-                                                                                                                                                                                                                                                  | "synth drum"
-                                                                                                                                                                                                                                                    | "reverse cymbal"
-                                                                                                                                                                                                                                                      | "guitar fret noise"
-                                                                                                                                                                                                                                                        | "breath noise"
-                                                                                                                                                                                                                                                          | "seashore"
-                                                                                                                                                                                                                                                            | "bird tweet"
-                                                                                                                                                                                                                                                              | "telephone ring"
-                                                                                                                                                                                                                                                                | "helicopter"
-                                                                                                                                                                                                                                                                  | "applause"
-                                                                                                                                                                                                                                                                    | "gunshot"
-                                                                                                                                                                                                                                                                      | "standard kit"
-                                                                                                                                                                                                                                                                        | "room kit"
-                                                                                                                                                                                                                                                                          | "power kit"
-                                                                                                                                                                                                                                                                            | "electronic kit"
-                                                                                                                                                                                                                                                                              | "tr-808 kit"
-                                                                                                                                                                                                                                                                                | "jazz kit"
-                                                                                                                                                                                                                                                                                  | "brush kit"
-                                                                                                                                                                                                                                                                                    | "orchestra kit"
-                                                                                                                                                                                                                                                                                      | "sound fx kit",
-      percussion?: boolean,
-    },
+    instrument: Instrument,
   }>,
-  stream: Array<{
-    type: "time",
-  }
-    & {
-      ticks: number,
-
-      // the time signature, e.g. [4, 4]
-      timeSignature: Array<number>,
-
-      measures?: number,
-    }
-    | {
-      type: "key",
-    }
-      & {
-        ticks: number,
-        key: "Cb"
-          | "Gb"
-            | "Db"
-              | "Ab"
-                | "Eb"
-                  | "Bb"
-                    | "F"
-                      | "C"
-                        | "G"
-                          | "D"
-                            | "A"
-                              | "E"
-                                | "B"
-                                  | "F#"
-                                    | "C#"
-                                      | "Ab"
-                                        | "Eb"
-                                          | "Bb"
-                                            | "F"
-                                              | "C"
-                                                | "G"
-                                                  | "D"
-                                                    | "A"
-                                                      | "E"
-                                                        | "B"
-                                                          | "F#"
-                                                            | "C#"
-                                                              | "G#"
-                                                                | "D#"
-                                                                  | "A#",
-        scale: string,
-      }
-    | {
-      type: "tempo",
-    }
-      & {
-        ticks: number,
-
-        // the tempo, e.g. 120
-        bpm: number,
-
-        time?: number,
-      }
+  stream: Array<TypedTime
+    | TypedKey
+    | TypedTempo
     | ControlChangeSpec
     | PitchBend
     | Note>,
