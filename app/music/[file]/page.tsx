@@ -2,14 +2,18 @@ import path from "path";
 import fs from "fs/promises";
 import { MidiSpec } from "@/app/player/midi-spec";
 import Player from "@/app/player/player";
-
-export const dynamic = "force-dynamic";
+import { allMusic } from "../all-music";
 
 type Props = {
   params: {
     file: string,
   },
 };
+
+// Export filenames for prerendering in production
+export async function generateStaticParams() {
+  return allMusic();
+}
 
 export default async function playPage({ params }: Props) {
   const file = await fs.readFile(path.join(process.cwd(), "app/music", params.file), "utf8");
