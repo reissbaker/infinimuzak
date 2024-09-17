@@ -12,7 +12,8 @@ type Props = {
 
 // Export filenames for prerendering in production
 export async function generateStaticParams() {
-  return allMusic();
+  const music = await allMusic()
+  return music.map(file => ({ file }));
 }
 
 export default async function playPage({ params }: Props) {
