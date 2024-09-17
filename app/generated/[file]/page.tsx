@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 }
 
 export default async function playPage({ params }: Props) {
-  const file = await fs.readFile(path.join(process.cwd(), "app/music", params.file), "utf8");
+  const file = await fs.readFile(path.join(process.cwd(), "app/generated", params.file), "utf8");
   const parsed = JSON.parse(file);
   const midi = MidiSpec.slice(parsed);
   return <div className="flex items-center justify-center w-full flex-col mt-2">
