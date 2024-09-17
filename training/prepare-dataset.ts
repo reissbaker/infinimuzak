@@ -8,12 +8,13 @@ import { descriptions } from "./descriptions";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type Message = {
-  role: "system" | "user" | "assistant",
+  role: | "human" | "gpt",
   content: string,
 };
 
 async function prepare() {
   const musicFiles = await allMusic();
+  const exampleFile = "dkc2-bonus.json";
   const midis = await Promise.all(musicFiles.map(async (file) => {
     const contents = await fs.readFile(path.join(__dirname, "../app/music", file), "utf8");
     const json = JSON.parse(contents);
@@ -24,9 +25,11 @@ async function prepare() {
   }));
 
   const dataset: Array<{ messages: Message[], file: string }> = [];
+  const training = midis.filter(midiData => midiData.file !== exampleFile);
+  const example = midis.find(md => md.file === exampleFile)!;
 
-  for(let i = 0; i < midis.length; i++) {
-    const midiData = midis[i];
+  for(let i = 0; i < training.length; i++) {
+    const midiData = training[i];
     dataset.push({ file: midiData.file, messages: songFromDescription(midiData.file, midiData.midi) });
     dataset.push({ file: midiData.file, messages: describeSong(midiData.file, midiData.midi) });
     dataset.push({ file: midiData.file, messages: finishSong(midiData.midi) });
@@ -41,7 +44,7 @@ async function prepare() {
       output,
     };
   }).filter(data => {
-    if(data.output.length > 100000 * 4) {
+    if(data.output.length > 64 * 1024 * 4) {
       console.log("Filtering", data.file);
       return false;
     }
@@ -49,7 +52,7 @@ async function prepare() {
   }).map(data => data.output);
 
   await fs.writeFile(path.join(__dirname, "dataset.jsonl"), jsonl.join("\n"), "utf8");
-  await fs.writeFile(path.join(__dirname, "system-prompt.txt"), systemPrompt(), "utf8");
+  await fs.writeFile(path.join(__dirname, "system-prompt.txt"), systemPrompt(example.midi), "utf8");
 }
 
 function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
@@ -75,15 +78,11 @@ function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
 
   return [
     {
-      role: "system",
-      content: systemPrompt(),
-    },
-    {
-      role: "user",
+      role: "human",
       content: `Here's part of a song; finish it for me:\n${JSON.stringify(partialSong)}`
     },
     {
-      role: "assistant",
+      role: "gpt",
       content: JSON.stringify(midi)
     },
   ];
@@ -96,15 +95,11 @@ function describeSong(file: string, midi: t.GetType<typeof MidiSpec>): Message[]
 
   return [
     {
-      role: "system",
-      content: systemPrompt(),
-    },
-    {
-      role: "user",
+      role: "human",
       content: `Describe this song in a few words:\n${JSON.stringify(midi)}`,
     },
     {
-      role: "assistant",
+      role: "gpt",
       content: desc.join(", ") + ".",
     }
   ];
@@ -115,24 +110,22 @@ function songFromDescription(file: string, midi: t.GetType<typeof MidiSpec>): Me
   const desc = descriptions[basename];
   return [
     {
-      role: "system",
-      content: systemPrompt(),
-    },
-    {
-      role: "user",
+      role: "human",
       content: `Write a song with these characteristics: ${desc.join(", ")}`,
     },
     {
-      role: "assistant",
+      role: "gpt",
       content: JSON.stringify(midi),
     },
   ];
 }
 
-function systemPrompt() {
+function systemPrompt(example: t.GetType<typeof MidiSpec>) {
 return `You're an excellent composer of MIDI-style music. Here is the TypeScript spec for MIDI-like JSON:
 
 ${toTypescript({ ControlChangeSpec, MidiSpec })}
+
+For example: ${JSON.stringify(example)}
 `
 }
 
