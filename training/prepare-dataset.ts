@@ -110,10 +110,11 @@ function describeSong(file: string, midi: t.GetType<typeof MidiSpec>): Message[]
 function songFromDescription(file: string, midi: t.GetType<typeof MidiSpec>): Message[] {
   const basename = file.replace(".json", "");
   const desc = descriptions[basename];
+  const hydrated = hydrateMidi(midi);
   return [
     {
       role: "human",
-      content: `Write a song with these characteristics: ${desc.join(", ")}`,
+      content: `Write a ${Math.round(hydrated.duration)} second song with these characteristics: ${desc.join(", ")}`,
     },
     {
       role: "gpt",
