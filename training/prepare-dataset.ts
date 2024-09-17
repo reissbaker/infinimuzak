@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { ControlChangeSpec, MidiSpec } from "@/app/player/midi-spec";
 import { allTrainingMusic } from "@/app/music/all-music";
 import { descriptions } from "./descriptions";
+import { hydrateMidi } from "@/app/player/hydrate-midi";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type Message = {
@@ -33,6 +34,7 @@ async function prepare() {
     dataset.push({ file: midiData.file, messages: songFromDescription(midiData.file, midiData.midi) });
     dataset.push({ file: midiData.file, messages: describeSong(midiData.file, midiData.midi) });
     dataset.push({ file: midiData.file, messages: finishSong(midiData.midi) });
+    dataset.push({ file: midiData.file, messages: songLength(midiData.midi) });
   }
 
   const jsonl = dataset.map(convo => {
@@ -116,6 +118,20 @@ function songFromDescription(file: string, midi: t.GetType<typeof MidiSpec>): Me
     {
       role: "gpt",
       content: JSON.stringify(midi),
+    },
+  ];
+}
+
+function songLength(midi: t.GetType<typeof MidiSpec>): Message[] {
+  const hydrated = hydrateMidi(midi);
+  return [
+    {
+      role: "human",
+      content: `How long is this song, in seconds?\n${JSON.stringify(midi)}`,
+    },
+    {
+      role: "gpt",
+      content: `${Math.round(hydrated.duration)} seconds`,
     },
   ];
 }
