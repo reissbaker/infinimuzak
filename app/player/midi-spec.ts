@@ -7,13 +7,8 @@ function fixInstrument(channel: number, instrument: t.GetType<typeof Instrument>
   };
 }
 
-function simplifyTempos(tempos: t.GetType<typeof Tempo>[]) {
-  tempos.sort((a, b) => {
-    if(a.ticks < b.ticks) return -1;
-    if(b.ticks < a.ticks) return 1;
-    return 0;
-  });
-
+function simplifyTempos(original: t.GetType<typeof Tempo>[]) {
+  const tempos = sortByTicks(original);
   const simplified: t.GetType<typeof Tempo>[] = [];
   let lastTempo: t.GetType<typeof Tempo> | null = null;
 
@@ -26,6 +21,38 @@ function simplifyTempos(tempos: t.GetType<typeof Tempo>[]) {
   }
 
   return simplified;
+}
+
+function simplifyPitchBends(original: t.GetType<typeof PitchBend>[]) {
+  const pitchBends = sortByTicks(original);
+  const simplified: t.GetType<typeof PitchBend>[] = [];
+  let lastPb: t.GetType<typeof PitchBend> | null = null;
+  for(const pb of pitchBends) {
+    if(lastPb && lastPb.ticks === pb.ticks && lastPb.track === pb.track) continue;
+    simplified.push(pb);
+    lastPb = pb;
+  }
+  return simplified;
+}
+
+function simplifyCcs(original: t.GetType<typeof ControlChangeSpec>[]) {
+  const ccs = sortByTicks(original);
+  const simplified: t.GetType<typeof ControlChangeSpec>[] = [];
+  let lastCc: t.GetType<typeof ControlChangeSpec> | null = null;
+  for(const cc of ccs) {
+    if(lastCc && lastCc.ticks === cc.ticks && lastCc.track === cc.track && lastCc.number === cc.number) continue;
+    simplified.push(cc);
+    lastCc = cc;
+  }
+  return simplified;
+}
+
+function sortByTicks<T extends { ticks: number }>(items: T[]): T[] {
+  return items.sort((a, b) => {
+    if(a.ticks < b.ticks) return -1;
+    if(b.ticks < a.ticks) return 1;
+    return 0;
+  });
 }
 
 export function toneToSimple(tone: t.GetType<typeof MidiSpec>): t.GetType<typeof SimpleMidiSpec> {
@@ -42,42 +69,43 @@ export function toneToSimple(tone: t.GetType<typeof MidiSpec>): t.GetType<typeof
         instrument: fixInstrument(track.channel, track.instrument),
       };
     }),
-    stream: tone.tracks.flatMap((track, id) => {
-      return [
-        ...tone.header.keySignatures.map(k => ({ ...k, type: "key" as const })),
-        ...tone.header.timeSignatures.map(t => ({ ...t, type: "time" as const })),
-        ...simplifyTempos(tone.header.tempos).map(t => ({ ...t, type: "tempo" as const })),
+    stream: [
+      ...tone.header.keySignatures.map(k => ({ ...k, type: "key" as const })),
+      ...tone.header.timeSignatures.map(t => ({ ...t, type: "time" as const })),
+      ...simplifyTempos(tone.header.tempos).map(t => ({ ...t, type: "tempo" as const })),
+      ...tone.tracks.flatMap((track, id) => {
+        return [
+          ...simplifyCcs(Object.values(track.controlChanges || {}).flatMap(ccs => {
+            return ccs.map(cc => {
+              return {
+                type: "cc" as const,
+                track: id,
+                number: cc.number,
+                ticks: cc.ticks,
+                value: cc.value,
+              } satisfies t.GetType<typeof ControlChangeSpec>;
+            });
+          })),
 
-        ...Object.values(track.controlChanges || {}).flatMap(ccs => {
-          return ccs.map(cc => {
+          ...simplifyPitchBends(track.pitchBends.map(pb => {
             return {
-              type: "cc" as const,
+              type: "pb" as const,
               track: id,
-              number: cc.number,
-              ticks: cc.ticks,
-              value: cc.value,
-            } satisfies t.GetType<typeof ControlChangeSpec>;
-          });
-        }),
+              ticks: pb.ticks,
+              value: pb.value,
+            };
+          })),
 
-        ...track.pitchBends.map(pb => {
-          return {
-            type: "pb" as const,
-            track: id,
-            ticks: pb.ticks,
-            value: pb.value,
-          };
-        }),
-
-        ...track.notes.map(note => {
-          return {
-            type: "note" as const,
-            track: id,
-            ...note,
-          };
-        }),
-      ];
-    }).sort((a, b) => {
+          ...track.notes.map(note => {
+            return {
+              type: "note" as const,
+              track: id,
+              ...note,
+            };
+          }),
+        ];
+      }),
+    ].sort((a, b) => {
       if(a.ticks < b.ticks) return -1;
       if(a.ticks > b.ticks) return 1;
       if(a.type === b.type) return 0;
