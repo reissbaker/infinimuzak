@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { allMusic } from "./all-music";
+import { allTrainingMusic } from "./all-music";
 
 export default async function MusicIndex() {
-  const jsonFiles = await allMusic();
+  const jsonFiles = await allTrainingMusic();
   return <div className="flex items-center justify-center w-full flex-col mt-2">
     {
       jsonFiles.map(file => {

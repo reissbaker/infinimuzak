@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import { MidiSpec } from "@/app/player/midi-spec";
 import Player from "@/app/player/player";
-import { allMusic } from "../all-music";
+import { allTrainingMusic } from "../all-music";
 
 type Props = {
   params: {
@@ -12,7 +12,7 @@ type Props = {
 
 // Export filenames for prerendering in production
 export async function generateStaticParams() {
-  const music = await allMusic()
+  const music = await allTrainingMusic()
   return music.map(file => ({ file }));
 }
 

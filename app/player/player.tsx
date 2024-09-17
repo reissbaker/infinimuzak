@@ -17,17 +17,8 @@ export default function Player(props: Props) {
   const midi = useMemo(() => {
     return hydrateMidi(props.midi);
   }, [ props.midi ]);
-  const [ timer, setTimer ] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if(playing) {
-      if(timer == null) {
-        setTimer(setTimeout(() => {
-          stop(synths, setSynths);
-          setPlaying(false);
-        }, midi.duration * 1000));
-      }
-    }
     return () => {
       if(playing) stop(synths, setSynths);
     }
@@ -36,7 +27,6 @@ export default function Player(props: Props) {
   return <>
     <a className="bg-sky-500 text-white hover:bg-sky-300 transition-colors rounded p-4 my-2 cursor-pointer" onClick={e => {
       e.preventDefault();
-      if(timer) clearTimeout(timer);
       if(playing) stop(synths, setSynths);
       else play(midi, synths, setSynths);
       setPlaying(!playing);

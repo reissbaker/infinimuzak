@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
 import { ControlChangeSpec, MidiSpec } from "@/app/player/midi-spec";
-import { allMusic } from "@/app/music/all-music";
+import { allTrainingMusic } from "@/app/music/all-music";
 import { descriptions } from "./descriptions";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,7 +13,7 @@ type Message = {
 };
 
 async function prepare() {
-  const musicFiles = await allMusic();
+  const musicFiles = await allTrainingMusic();
   const exampleFile = "dkc2-bonus.json";
   const midis = await Promise.all(musicFiles.map(async (file) => {
     const contents = await fs.readFile(path.join(__dirname, "../app/music", file), "utf8");
