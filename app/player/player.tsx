@@ -43,7 +43,7 @@ export default function Player(props: Props) {
     }}>
       { playing ? "Stop" : "Play" }
     </a>
-    <p>{ midi.duration } seconds</p>
+    <p>{ Math.round(midi.duration) } seconds</p>
   </>
 }
 
