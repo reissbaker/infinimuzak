@@ -1,8 +1,9 @@
 import { t } from "structural";
-import { MidiSpec } from "./midi-spec";
+import { MidiSpec, SimpleMidiSpec, simpleToTone, toneToSimple } from "./midi-spec";
 import { Midi } from "@tonejs/midi";
 
-export function hydrateMidi(midi: t.GetType<typeof MidiSpec>) {
+export function hydrateMidi(input: t.GetType<typeof MidiSpec> | t.GetType<typeof SimpleMidiSpec>) {
+  const midi = SimpleMidiSpec.guard(input) ? simpleToTone(input) : simpleToTone(toneToSimple(input));
   const hydrated = new Midi();
   hydrated.fromJSON({
     header: {

@@ -1,8 +1,8 @@
-import { t, toTypescript } from "structural";
+import { t } from "structural";
 import path from "path";
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
-import { ControlChangeSpec, MidiSpec } from "@/app/player/midi-spec";
+import { MidiSpec, toneToSimple, simpleMidiToTypescript } from "@/app/player/midi-spec";
 import { allTrainingMusic } from "@/app/music/all-music";
 import { descriptions } from "./descriptions";
 import { hydrateMidi } from "@/app/player/hydrate-midi";
@@ -46,7 +46,7 @@ async function prepare() {
       output,
     };
   }).filter(data => {
-    if(data.output.length > 75 * 1024 * 4) {
+    if(data.output.length > 100 * 1024 * 4) {
       console.log("Filtering", data.file);
       return false;
     }
@@ -58,24 +58,10 @@ async function prepare() {
 }
 
 function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
-  const partialSong: t.GetType<typeof MidiSpec> = {
-    header: midi.header,
-    tracks: midi.tracks.map(track => {
-      return {
-        name: track.name,
-        channel: track.channel,
-        endOfTrackTicks: track.endOfTrackTicks,
-        instrument: track.instrument,
-        pitchBends: halfArray(track.pitchBends),
-        notes: halfArray(track.notes),
-        controlChanges: Object.fromEntries(Object.entries(track.controlChanges || {}).map(([ key, value ]) => {
-          return [
-            key,
-            halfArray(value),
-          ];
-        })),
-      };
-    }),
+  const simplified = toneToSimple(midi);
+  const partialSong = {
+    header: simplified.header,
+    stream: halfArray(simplified.stream),
   };
 
   return [
@@ -85,7 +71,7 @@ function finishSong(midi: t.GetType<typeof MidiSpec>): Message[] {
     },
     {
       role: "gpt",
-      content: JSON.stringify(midi)
+      content: JSON.stringify(simplified)
     },
   ];
 }
@@ -98,7 +84,7 @@ function describeSong(file: string, midi: t.GetType<typeof MidiSpec>): Message[]
   return [
     {
       role: "human",
-      content: `Describe this song in a few words:\n${JSON.stringify(midi)}`,
+      content: `Describe this song in a few words:\n${JSON.stringify(toneToSimple(midi))}`,
     },
     {
       role: "gpt",
@@ -118,7 +104,7 @@ function songFromDescription(file: string, midi: t.GetType<typeof MidiSpec>): Me
     },
     {
       role: "gpt",
-      content: JSON.stringify(midi),
+      content: JSON.stringify(toneToSimple(midi)),
     },
   ];
 }
@@ -128,7 +114,7 @@ function songLength(midi: t.GetType<typeof MidiSpec>): Message[] {
   return [
     {
       role: "human",
-      content: `How long is this song, in seconds?\n${JSON.stringify(midi)}`,
+      content: `How long is this song, in seconds?\n${JSON.stringify(toneToSimple(midi))}`,
     },
     {
       role: "gpt",
@@ -140,9 +126,9 @@ function songLength(midi: t.GetType<typeof MidiSpec>): Message[] {
 function systemPrompt(example: t.GetType<typeof MidiSpec>) {
 return `You're an excellent composer of MIDI-style music. Here is the TypeScript spec for MIDI-like JSON:
 
-${toTypescript({ ControlChangeSpec, MidiSpec })}
+${simpleMidiToTypescript()}
 
-For example: ${JSON.stringify(example)}
+For example: ${JSON.stringify(toneToSimple(example))}
 `
 }
 

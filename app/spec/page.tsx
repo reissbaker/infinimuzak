@@ -1,8 +1,14 @@
-import { toTypescript } from "structural";
-import { MidiSpec, ControlChangeSpec } from "../player/midi-spec";
+import { toneToTypescript, simpleMidiToTypescript } from "../player/midi-spec";
 
 export default function SpecPage() {
-  return <code className="whitespace-pre-wrap flex items-center justify-center w-full">
-    { toTypescript({ ControlChangeSpec, MidiSpec }) }
-  </code>
+  return <div className="flex items-center justify-center w-full flex-col">
+    <h1 className="text-xl font-bold my-2">Simple MIDI spec for LLMs:</h1>
+    <code className="whitespace-pre-wrap flex items-center justify-center w-full">
+      { simpleMidiToTypescript() }
+    </code>
+    <h1 className="text-xl font-bold my-2">Full ToneJS MIDI JSON spec:</h1>
+    <code className="whitespace-pre-wrap flex items-center justify-center w-full">
+      { toneToTypescript() }
+    </code>
+  </div>
 }
