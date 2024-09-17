@@ -102,7 +102,7 @@ export const MidiSpec = t.subtype({
 
     // midi control changes
     // if there are control changes in the midi file
-    controlChanges: t.partial(t.subtype({
+    controlChanges: t.optional(t.partial(t.subtype({
       1: t.array(ControlChangeSpec), // modulation wheel
       2: t.array(ControlChangeSpec), // breath
       4: t.array(ControlChangeSpec), // footController
@@ -116,7 +116,7 @@ export const MidiSpec = t.subtype({
       67: t.array(ControlChangeSpec), // softPedal
       68: t.array(ControlChangeSpec), // legatoFootswitch
       84: t.array(ControlChangeSpec), // portamentoControl
-    })),
+    }))),
   }))
 });
 

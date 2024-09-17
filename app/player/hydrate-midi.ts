@@ -27,7 +27,7 @@ export function hydrateMidi(midi: t.GetType<typeof MidiSpec>) {
           };
         }),
 
-        controlChanges: Object.fromEntries(Object.entries(track.controlChanges).map(([ key, ctrls ]) => {
+        controlChanges: Object.fromEntries(Object.entries(track.controlChanges || {}).map(([ key, ctrls ]) => {
           return [
             key,
             ctrls.map(ctrl => {
