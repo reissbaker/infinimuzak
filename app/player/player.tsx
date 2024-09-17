@@ -6,7 +6,6 @@ import { Midi } from "@tonejs/midi";
 import { MidiSpec } from "./midi-spec";
 import { hydrateMidi } from "./hydrate-midi";
 
-
 type Props = {
   midi: t.GetType<typeof MidiSpec>,
 };
@@ -25,7 +24,7 @@ export default function Player(props: Props) {
         setTimer(setTimeout(() => {
           stop(synths, setSynths);
           setPlaying(false);
-        }, midi.duration * 1000));
+        }, (midi.duration * 1000) + 2000));
       }
     }
     return () => {
