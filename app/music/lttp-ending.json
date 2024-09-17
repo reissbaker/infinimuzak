@@ -302,9 +302,9 @@
       },
       "pitchBends": [],
       "instrument": {
-        "family": "piano",
+        "family": "strings",
         "number": 0,
-        "name": "acoustic grand piano"
+        "name": "violin"
       },
       "name": "Violin I",
       "notes": [],
@@ -5959,9 +5959,9 @@
       },
       "pitchBends": [],
       "instrument": {
-        "family": "piano",
+        "family": "strings",
         "number": 0,
-        "name": "acoustic grand piano"
+        "name": "violin"
       },
       "name": "Violin II",
       "notes": [],

@@ -1,18 +1,53 @@
 import { t, toTypescript } from "structural";
 
-export function toneToSimple(tone: t.GetType<typeof MidiSpec>): t.GetType<typeof SimpleMidiSpec> {
+function fixInstrument(channel: number, instrument: t.GetType<typeof Instrument>) {
   return {
-    header: tone.header,
-    trackDefinitions: tone.tracks.map((track, id) => {
+    ...instrument,
+    percussion: channel === 9 || channel === 10,
+  };
+}
+
+function simplifyTempos(tempos: t.GetType<typeof Tempo>[]) {
+  tempos.sort((a, b) => {
+    if(a.ticks < b.ticks) return -1;
+    if(b.ticks < a.ticks) return 1;
+    return 0;
+  });
+
+  const simplified: t.GetType<typeof Tempo>[] = [];
+  let lastTempo: t.GetType<typeof Tempo> | null = null;
+
+  for(const tempo of tempos) {
+    if(lastTempo && lastTempo.bpm === tempo.bpm) continue;
+    if(lastTempo && lastTempo.ticks === tempo.ticks) continue;
+
+    simplified.push(tempo);
+    lastTempo = tempo;
+  }
+
+  return simplified;
+}
+
+export function toneToSimple(tone: t.GetType<typeof MidiSpec>): t.GetType<typeof SimpleMidiSpec> {
+  return SimpleMidiSpec.slice({
+    header: {
+      name: tone.header.name,
+      ppq: tone.header.ppq,
+    },
+    trackDefinitions: tone.tracks.filter(t => t.notes.length !== 0).map((track, id) => {
       return {
         id,
         name: track.name,
         channel: track.channel,
-        instrument: track.instrument,
+        instrument: fixInstrument(track.channel, track.instrument),
       };
     }),
     stream: tone.tracks.flatMap((track, id) => {
       return [
+        ...tone.header.keySignatures.map(k => ({ ...k, type: "key" as const })),
+        ...tone.header.timeSignatures.map(t => ({ ...t, type: "time" as const })),
+        ...simplifyTempos(tone.header.tempos).map(t => ({ ...t, type: "tempo" as const })),
+
         ...Object.values(track.controlChanges || {}).flatMap(ccs => {
           return ccs.map(cc => {
             return {
@@ -45,32 +80,54 @@ export function toneToSimple(tone: t.GetType<typeof MidiSpec>): t.GetType<typeof
     }).sort((a, b) => {
       if(a.ticks < b.ticks) return -1;
       if(a.ticks > b.ticks) return 1;
+      if(a.type === b.type) return 0;
+      if(a.type === "time") return -1;
+      if(b.type === "time") return 1;
+      if(a.type === "tempo") return -1;
+      if(b.type === "tempo") return 1;
+      if(a.type === "key") return -1;
+      if(b.type === "key") return 1;
+      if(a.type === "cc") return -1;
+      if(b.type === "cc") return 1;
+      if(a.type === "pb") return -1;
+      if(b.type === "pb") return 1;
+      // tsc checks we handled all types above
+      const _1: "note" = a.type;
+      const _2: "note" = b.type;
+
       return 0;
     }),
-  };
+  } satisfies t.GetType<typeof SimpleMidiSpec>);
 }
 
 export function simpleToTone(simple: t.GetType<typeof SimpleMidiSpec>): t.GetType<typeof MidiSpec> {
-  function trackFilter<T extends { track: number }>(id: number, items: T[]) {
-    return items.filter(item => item.track === id);
+  function trackFilter<T extends { track: number }>(id: number, items: any[], type: t.Type<T>): T[] {
+    return items.filter(item => item.track === id && type.guard(item));
   }
 
-  return {
-    header: simple.header,
+  const keySignatures = simple.stream.filter(item => KeySignature.guard(item));
+  const tempos = simplifyTempos(simple.stream.filter(item => Tempo.guard(item)));
+  const timeSignatures = simple.stream.filter(item => TimeSignature.guard(item));
+
+  return MidiSpec.slice({
+    header: {
+      ...simple.header,
+      keySignatures, tempos, timeSignatures,
+    },
     tracks: simple.trackDefinitions.map(td => {
       const id = td.id;
-      const pitchBends = trackFilter(id, simple.stream).filter(item => PitchBend.guard(item));
-      const notes = trackFilter(id, simple.stream).filter(item => Note.guard(item));
-      const ccs = trackFilter(id, simple.stream).filter(item => ControlChangeSpec.guard(item));
+      const pitchBends = trackFilter(id, simple.stream, PitchBend);
+      const notes = trackFilter(id, simple.stream, Note);
+      const ccs = trackFilter(id, simple.stream, ControlChangeSpec);
       const ccNumSet = new Set<t.GetType<typeof ControlChangeNum>>();
       for(const cc of ccs) {
         ccNumSet.add(cc.number);
       }
       const ccNums = Array.from(ccNumSet);
       return {
-        name: td.name,
+        name: "",
         channel: td.channel,
-        instrument: td.instrument,
+        instrument: fixInstrument(td.channel, td.instrument),
         pitchBends, notes,
         controlChanges: Object.fromEntries(ccNums.map(num => {
           return [
@@ -80,13 +137,181 @@ export function simpleToTone(simple: t.GetType<typeof SimpleMidiSpec>): t.GetTyp
         })),
       };
     }),
-  };
+  } satisfies t.GetType<typeof MidiSpec>);
 }
 
+export const instrumentNames = [
+  "acoustic grand piano",
+	"bright acoustic piano",
+	"electric grand piano",
+	"honky-tonk piano",
+	"electric piano 1",
+	"electric piano 2",
+	"harpsichord",
+	"clavi",
+	"celesta",
+	"glockenspiel",
+	"music box",
+	"vibraphone",
+	"marimba",
+	"xylophone",
+	"tubular bells",
+	"dulcimer",
+	"drawbar organ",
+	"percussive organ",
+	"rock organ",
+	"church organ",
+	"reed organ",
+	"accordion",
+	"harmonica",
+	"tango accordion",
+	"acoustic guitar (nylon)",
+	"acoustic guitar (steel)",
+	"electric guitar (jazz)",
+	"electric guitar (clean)",
+	"electric guitar (muted)",
+	"overdriven guitar",
+	"distortion guitar",
+	"guitar harmonics",
+	"acoustic bass",
+	"electric bass (finger)",
+	"electric bass (pick)",
+	"fretless bass",
+	"slap bass 1",
+	"slap bass 2",
+	"synth bass 1",
+	"synth bass 2",
+	"violin",
+	"viola",
+	"cello",
+	"contrabass",
+	"tremolo strings",
+	"pizzicato strings",
+	"orchestral harp",
+	"timpani",
+	"string ensemble 1",
+	"string ensemble 2",
+	"synthstrings 1",
+	"synthstrings 2",
+	"choir aahs",
+	"voice oohs",
+	"synth voice",
+	"orchestra hit",
+	"trumpet",
+	"trombone",
+	"tuba",
+	"muted trumpet",
+	"french horn",
+	"brass section",
+	"synthbrass 1",
+	"synthbrass 2",
+	"soprano sax",
+	"alto sax",
+	"tenor sax",
+	"baritone sax",
+	"oboe",
+	"english horn",
+	"bassoon",
+	"clarinet",
+	"piccolo",
+	"flute",
+	"recorder",
+	"pan flute",
+	"blown bottle",
+	"shakuhachi",
+	"whistle",
+	"ocarina",
+	"lead 1 (square)",
+	"lead 2 (sawtooth)",
+	"lead 3 (calliope)",
+	"lead 4 (chiff)",
+	"lead 5 (charang)",
+	"lead 6 (voice)",
+	"lead 7 (fifths)",
+	"lead 8 (bass + lead)",
+	"pad 1 (new age)",
+	"pad 2 (warm)",
+	"pad 3 (polysynth)",
+	"pad 4 (choir)",
+	"pad 5 (bowed)",
+	"pad 6 (metallic)",
+	"pad 7 (halo)",
+	"pad 8 (sweep)",
+	"fx 1 (rain)",
+	"fx 2 (soundtrack)",
+	"fx 3 (crystal)",
+	"fx 4 (atmosphere)",
+	"fx 5 (brightness)",
+	"fx 6 (goblins)",
+	"fx 7 (echoes)",
+	"fx 8 (sci-fi)",
+	"sitar",
+	"banjo",
+	"shamisen",
+	"koto",
+	"kalimba",
+	"bag pipe",
+	"fiddle",
+	"shanai",
+	"tinkle bell",
+	"agogo",
+	"steel drums",
+	"woodblock",
+	"taiko drum",
+	"melodic tom",
+	"synth drum",
+	"reverse cymbal",
+	"guitar fret noise",
+	"breath noise",
+	"seashore",
+	"bird tweet",
+	"telephone ring",
+	"helicopter",
+	"applause",
+	"gunshot",
+] as const;
+
+export const drumKitByPatchID = {
+	0: "standard kit" as const,
+	8: "room kit" as const,
+	16: "power kit" as const,
+	24: "electronic kit" as const,
+	25: "tr-808 kit" as const,
+	32: "jazz kit" as const,
+	40: "brush kit" as const,
+	48: "orchestra kit" as const,
+	56: "sound fx kit" as const,
+};
+
+export const InstrumentName = anyOf([
+  ...instrumentNames,
+  ...Object.values(drumKitByPatchID)
+]);
+
+const instrumentFamily = [
+  "piano",
+	"chromatic percussion",
+	"organ",
+	"guitar",
+	"bass",
+	"strings",
+	"ensemble",
+	"brass",
+	"reed",
+	"pipe",
+	"synth lead",
+	"synth pad",
+	"synth effects",
+	"world",
+	"percussive",
+	"sound effects",
+  "drums",
+] as const;
+export const InstrumentFamily = anyOf(instrumentFamily);
+
 export const Instrument = t.subtype({
-  number : t.num.comment("Instrument number 0-127"),
-  family: t.str.comment("The family of the instruments, read-only"),
-  name : t.str,
+  family: InstrumentFamily,
+  name : InstrumentName,
   percussion: t.optional(t.bool),
 });
 const ControlChangeNum = anyOf([
@@ -117,7 +342,67 @@ const ControlChangeNum = anyOf([
 67: softPedal
 68: legatoFootswitch
 84: portamentoControl
-`)
+`);
+
+const TimeSignature = t.subtype({
+  ticks: t.num,
+  timeSignature: t.array(t.num).comment("the time signature, e.g. [4, 4]"),
+  measures: t.optional(t.num),
+});
+
+const Tempo = t.subtype({
+  ticks: t.num,
+  bpm: t.num.comment("the tempo, e.g. 120"),
+  time: t.optional(t.num),
+});
+
+const KeySignature = t.subtype({
+  ticks: t.num,
+  key: anyOf([
+    "Cb",
+    "Gb",
+    "Db",
+    "Ab",
+    "Eb",
+    "Bb",
+    "F",
+    "C",
+    "G",
+    "D",
+    "A",
+    "E",
+    "B",
+    "F#",
+    "C#",
+    "Ab",
+    "Eb",
+    "Bb",
+    "F",
+    "C",
+    "G",
+    "D",
+    "A",
+    "E",
+    "B",
+    "F#",
+    "C#",
+    "G#",
+    "D#",
+    "A#",
+  ]),
+  scale: t.str,
+});
+
+const HeaderTimingSpec = t.subtype({
+  tempos: t.array(Tempo),
+  timeSignatures: t.array(TimeSignature),
+  keySignatures: t.array(KeySignature),
+});
+
+const HeaderSpec = t.subtype({
+  name: t.str.comment("The song name"),
+  ppq: t.num.comment("the Pulses Per Quarter of the midi file"),
+});
 
 /*
  * The actual MIDI JSON spec used by ToneJS, enforced to use ticks rather than seconds
@@ -134,62 +419,7 @@ export const ControlChangeValueSpec = t.subtype({
 
 export const MidiSpec = t.subtype({
   // the transport and timing data
-  header: t.subtype({
-    name: t.str.comment("The name of the first track, which is usually the song name"),
-
-    // the tempo, e.g. 120
-    tempos: t.array(t.subtype({
-      ticks: t.num,
-      bpm: t.num,
-      time: t.optional(t.num),
-    })).comment("the tempo, e.g. 120"),
-
-    timeSignatures: t.array(t.subtype({
-      ticks: t.num,
-      timeSignature: t.array(t.num),
-      measures: t.optional(t.num),
-    })).comment("the time signature, e.g. [4, 4]"),
-
-    keySignatures: t.array(t.subtype({
-      ticks: t.num,
-      key: anyOf([
-        "Cb",
-        "Gb",
-        "Db",
-        "Ab",
-        "Eb",
-        "Bb",
-        "F",
-        "C",
-        "G",
-        "D",
-        "A",
-        "E",
-        "B",
-        "F#",
-        "C#",
-        "Ab",
-        "Eb",
-        "Bb",
-        "F",
-        "C",
-        "G",
-        "D",
-        "A",
-        "E",
-        "B",
-        "F#",
-        "C#",
-        "G#",
-        "D#",
-        "A#",
-      ]),
-      scale: t.str,
-    })),
-
-    ppq: t.num.comment("the Pulses Per Quarter of the midi file"),
-  }),
-
+  header: HeaderSpec.and(HeaderTimingSpec),
 
   // an array of midi tracks
   tracks: t.array(t.subtype({
@@ -297,72 +527,28 @@ export const Note = t.subtype({
   durationTicks: t.num.comment("Duration between noteOn and noteOff"),
 });
 
+function withType<Name extends string, T>(name: Name, check: t.Type<T>): t.Type<T & { type: Name }> {
+  return t.subtype({
+    type: t.value(name),
+  }).and(check);
+}
+
 export const SimpleMidiSpec = t.subtype({
   // the transport and timing data
-  header: t.subtype({
-    name: t.str.comment("The name of the first track, which is usually the song name"),
-
-    // the tempo, e.g. 120
-    tempos: t.array(t.subtype({
-      ticks: t.num,
-      bpm: t.num,
-      time: t.optional(t.num),
-    })).comment("the tempo, e.g. 120"),
-
-    timeSignatures: t.array(t.subtype({
-      ticks: t.num,
-      timeSignature: t.array(t.num),
-      measures: t.optional(t.num),
-    })).comment("the time signature, e.g. [4, 4]"),
-
-    keySignatures: t.array(t.subtype({
-      ticks: t.num,
-      key: anyOf([
-        "Cb",
-        "Gb",
-        "Db",
-        "Ab",
-        "Eb",
-        "Bb",
-        "F",
-        "C",
-        "G",
-        "D",
-        "A",
-        "E",
-        "B",
-        "F#",
-        "C#",
-        "Ab",
-        "Eb",
-        "Bb",
-        "F",
-        "C",
-        "G",
-        "D",
-        "A",
-        "E",
-        "B",
-        "F#",
-        "C#",
-        "G#",
-        "D#",
-        "A#",
-      ]),
-      scale: t.str,
-    })),
-
-    ppq: t.num.comment("the Pulses Per Quarter of the midi file"),
-  }),
-
+  header: HeaderSpec,
   trackDefinitions: t.array(t.subtype({
     id: t.num,
-    name: t.str,
     channel: t.num.comment("the channel; channels 9 and 10 are reserved for percussion"),
     instrument: Instrument,
   })),
-
-  stream: t.array(ControlChangeSpec.or(PitchBend).or(Note)),
+  stream: t.array(
+    withType("time", TimeSignature)
+    .or(withType("key", KeySignature))
+    .or(withType("tempo", Tempo))
+    .or(ControlChangeSpec)
+    .or(PitchBend)
+    .or(Note)
+  ),
 });
 
 function anyOf<T extends string | number>(array: readonly T[]): t.Type<T> {

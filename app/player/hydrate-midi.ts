@@ -1,5 +1,5 @@
 import { t } from "structural";
-import { MidiSpec, SimpleMidiSpec, simpleToTone, toneToSimple } from "./midi-spec";
+import { MidiSpec, SimpleMidiSpec, simpleToTone, toneToSimple, instrumentNames, drumKitByPatchID } from "./midi-spec";
 import { Midi } from "@tonejs/midi";
 
 export function hydrateMidi(input: t.GetType<typeof MidiSpec> | t.GetType<typeof SimpleMidiSpec>) {
@@ -11,8 +11,27 @@ export function hydrateMidi(input: t.GetType<typeof MidiSpec> | t.GetType<typeof
       meta: [],
     },
     tracks: midi.tracks.map(track => {
+      const instrumentName = track.instrument.name;
+      const drumEntries = Object.entries(drumKitByPatchID);
+      let instrumentNumber = -1;
+      for(const entry of drumEntries) {
+        if(entry[1] === instrumentName) {
+          instrumentNumber = parseInt(entry[0], 10);
+          break;
+        }
+      }
+      if(instrumentNumber < 0) {
+        instrumentNumber = (instrumentNames as readonly string[]).indexOf(instrumentName);
+      }
+      if(instrumentNumber < 0) throw `Unknown instrument ${instrumentName}`;
+
       return {
         ...track,
+
+        instrument: {
+          ...track.instrument,
+          number: instrumentNumber,
+        },
 
         pitchBends: track.pitchBends.map(bend => {
           return {

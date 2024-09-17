@@ -3,11 +3,11 @@ import { t } from "structural";
 import { useState, useMemo, useEffect } from "react";
 import * as Tone from "tone";
 import { Midi } from "@tonejs/midi";
-import { MidiSpec } from "./midi-spec";
+import { MidiSpec, SimpleMidiSpec } from "./midi-spec";
 import { hydrateMidi } from "./hydrate-midi";
 
 type Props = {
-  midi: t.GetType<typeof MidiSpec>,
+  midi: t.GetType<typeof MidiSpec> | t.GetType<typeof SimpleMidiSpec>,
 };
 
 export default function Player(props: Props) {

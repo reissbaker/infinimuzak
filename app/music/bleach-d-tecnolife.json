@@ -56,9 +56,8 @@
       },
       "pitchBends": [],
       "instrument": {
-        "family": "piano",
-        "number": 0,
-        "name": "acoustic grand piano"
+        "family": "guitar",
+        "name": "overdriven guitar"
       },
       "name": "Overdriven Guitar",
       "notes": [
@@ -4719,9 +4718,9 @@
       },
       "pitchBends": [],
       "instrument": {
-        "family": "piano",
+        "family": "bass",
         "number": 0,
-        "name": "acoustic grand piano"
+        "name": "electric bass (finger)"
       },
       "name": "Electric Bass (finger)",
       "notes": [
@@ -6700,9 +6699,9 @@
       },
       "pitchBends": [],
       "instrument": {
-        "family": "piano",
+        "family": "brass",
         "number": 0,
-        "name": "acoustic grand piano"
+        "name": "synthbrass 1"
       },
       "name": "SynthBrass 1",
       "notes": [
