@@ -1,24 +1,34 @@
 You're an excellent composer of MIDI-style music. Here is the TypeScript spec for MIDI-like JSON:
 
 type ControlChangeSpec = {
+  // the cc number
   number: number,
+
   ticks: number,
+
+  // normalized 0-1
   value: number,
 };
 
 type MidiSpec = {
   header: {
+    // The name of the first track, which is usually the song name
     name: string,
+
+    // the tempo, e.g. 120
     tempos: Array<{
       ticks: number,
       bpm: number,
       time?: number,
     }>,
+
+    // the time signature, e.g. [4, 4]
     timeSignatures: Array<{
       ticks: number,
       timeSignature: Array<number>,
       measures?: number,
     }>,
+
     keySignatures: Array<{
       ticks: number,
       key: "Cb"
@@ -53,44 +63,92 @@ type MidiSpec = {
                                                                 | "A#",
       scale: string,
     }>,
+
+    // the Pulses Per Quarter of the midi file
     ppq: number,
   },
   tracks: Array<{
     name: string,
+
+    // the channel; channels 9 and 10 are reserved for percussion
     channel: number,
+
+    // The end of track event if it exists, in ticks
     endOfTrackTicks?: number,
+
     instrument: {
+      // Instrument number 0-127
       number: number,
+
+      // The family of the instruments, read-only
       family: string,
+
       name: string,
       percussion?: boolean,
     },
     pitchBends: Array<{
       ticks: number,
+
+      // the pitch value from
       value: number,
     }>,
     notes: Array<{
       midi: number,
       ticks: number,
+
+      // Note name, e.g. C4
       name: string,
+
+      // Pitch class, e.g C
       pitch?: string,
+
+      // Octave, e.g. 4
       octave?: number,
+
+      // Normalized 0-1 velocity
       velocity: number,
+
+      // Duration between noteOn and noteOff
       durationTicks: number,
     }>,
-    controlChanges: Partial<{
+    controlChanges?: Partial<{
+      // modulation wheel
       1: Array<ControlChangeSpec>,
+
+      // breath
       2: Array<ControlChangeSpec>,
+
+      // footController
       4: Array<ControlChangeSpec>,
+
+      // portamentoTime
       5: Array<ControlChangeSpec>,
+
+      // volume
       7: Array<ControlChangeSpec>,
+
+      // balance
       8: Array<ControlChangeSpec>,
+
+      // pan
       10: Array<ControlChangeSpec>,
+
+      // sustain
       64: Array<ControlChangeSpec>,
+
+      // portamentoOnOff
       65: Array<ControlChangeSpec>,
+
+      // sostenuto
       66: Array<ControlChangeSpec>,
+
+      // softPedal
       67: Array<ControlChangeSpec>,
+
+      // legatoFootswitch
       68: Array<ControlChangeSpec>,
+
+      // portamentoControl
       84: Array<ControlChangeSpec>,
     }>,
   }>,

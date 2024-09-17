@@ -46,7 +46,7 @@ async function prepare() {
       output,
     };
   }).filter(data => {
-    if(data.output.length > 64 * 1024 * 4) {
+    if(data.output.length > 75 * 1024 * 4) {
       console.log("Filtering", data.file);
       return false;
     }
