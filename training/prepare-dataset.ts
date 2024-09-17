@@ -15,7 +15,7 @@ type Message = {
 
 async function prepare() {
   const musicFiles = await allTrainingMusic();
-  const exampleFile = "dkc2-bonus.json";
+  const exampleFile = "zelda-triforce-example.json";
   const midis = await Promise.all(musicFiles.map(async (file) => {
     const contents = await fs.readFile(path.join(__dirname, "../app/music", file), "utf8");
     const json = JSON.parse(contents);
@@ -46,7 +46,7 @@ async function prepare() {
       output,
     };
   }).filter(data => {
-    if(data.output.length > 100 * 1024 * 4) {
+    if(data.output.length > 90 * 1024 * 4) {
       console.log("Filtering", data.file);
       return false;
     }
