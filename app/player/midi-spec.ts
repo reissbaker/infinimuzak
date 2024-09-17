@@ -497,7 +497,9 @@ export const MidiSpec = t.subtype({
  * The simplified MIDI spec we allow LLMs to use
  */
 export function simpleMidiToTypescript() {
-  return toTypescript({ ControlChangeSpec, PitchBend, Note, SimpleMidiSpec });
+  return toTypescript({
+    TypedTime, TypedKey, TypedTempo, ControlChangeSpec, PitchBend, Note, Instrument, SimpleMidiSpec
+  });
 }
 
 export const ControlChangeSpec = t.subtype({
@@ -561,6 +563,10 @@ function withType<Name extends string, T>(name: Name, check: t.Type<T>): t.Type<
   }).and(check);
 }
 
+const TypedTime = withType("time", TimeSignature);;
+const TypedKey = withType("key", KeySignature);
+const TypedTempo = withType("tempo", Tempo);
+
 export const SimpleMidiSpec = t.subtype({
   // the transport and timing data
   header: HeaderSpec,
@@ -570,9 +576,9 @@ export const SimpleMidiSpec = t.subtype({
     instrument: Instrument,
   })),
   stream: t.array(
-    withType("time", TimeSignature)
-    .or(withType("key", KeySignature))
-    .or(withType("tempo", Tempo))
+    TypedTime
+    .or(TypedKey)
+    .or(TypedTempo)
     .or(ControlChangeSpec)
     .or(PitchBend)
     .or(Note)
@@ -580,6 +586,9 @@ export const SimpleMidiSpec = t.subtype({
 });
 
 function anyOf<T extends string | number>(array: readonly T[]): t.Type<T> {
-  if(array.length === 1) return t.value(array[0]);
-  return t.value(array[0]).or(anyOf(array.slice(1)));
+  let check: t.Type<any> = t.value(array[0]);
+  for(let i = 1; i < array.length; i++) {
+    check = check.or(t.value(array[i]));
+  }
+  return check;
 }
